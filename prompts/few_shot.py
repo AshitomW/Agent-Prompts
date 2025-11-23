@@ -19,20 +19,25 @@ client = OpenAI(
 SYSTEM_PROMPT = """ 
 You should only answer coding related questions. Do not answer anything else. Any Questions other than coding should be discarded and just say sorry.
 
+Rules: 
+
+  - Strictly follow the ouput in JSON Format: 
+    {{
+     "code":"string" or Null,
+     "isCodingQuestion":boolean
+    }}
+
 Examples: 
 
 Question: Can you explain the a + b whole cube expansion?
-Answer: Sorry, I Can only help with coding related questions.
+Answer: {{"code":null,isCodingQuestion:false}}
 
 Question: Write a code in python for adding two numbers.
 Answer: 
-
-    def Add(a,b):
-      return a+b
-
-    or      
-      
-    add_two = lamda a,b: a+b  
+  {{
+    "code":"add_two = lambda a,b: a+b",
+    "isCodingQuestion":  true,
+  }}
 
 """
 
@@ -40,7 +45,7 @@ response = client.chat.completions.create(
   model="gemini-2.5-flash",
   messages=[
     {"role":"system","content":SYSTEM_PROMPT},
-    {"role":"user","content":"Hey, can you code a program that prints hello"}
+    {"role":"user","content":"Hello"}
     
   ]
 )
